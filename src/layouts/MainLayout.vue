@@ -10,7 +10,7 @@
             round
             dense
             icon="eva-home-outline"
-            to="/home"
+            to="/"
           />
           <q-btn
             class="q-mx-sm"

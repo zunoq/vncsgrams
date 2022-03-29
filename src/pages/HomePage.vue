@@ -21,7 +21,7 @@
 
           <!-- TEST -->
           <q-card-section>
-            <div class="">{{ post.caption }}</div>
+            <q-item-label class="text-grey-9"><strong class="text-grey-10">zunoq</strong> {{ post.caption }}</q-item-label>
             <div class="text-caption text-grey">
               {{ dateconvert(post.date) }}
             </div>
