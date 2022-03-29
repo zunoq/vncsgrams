@@ -1,0 +1,32 @@
+// app global css in SCSS form
+@font-face {
+  font-family: "Grand Hotel", "Roboto", sans-serif;
+  src: url(../assets/fonts/Grand_Hotel/GrandHotel-Regular.ttf);
+}
+.grand-hotel {
+  font-family: "Grand Hotel";
+}
+.small-screen-only {
+  @media (max-width: $breakpoint-xs-max) {
+    display: block;
+  }
+  @media (min-width: $breakpoint-sm-min) {
+    display: none;
+  }
+}
+.large-screen-only {
+  @media (max-width: $breakpoint-xs-max) {
+    display: none;
+  }
+  @media (min-width: $breakpoint-sm-min) {
+    display: block;
+  }
+}
+.constrain {
+  max-width: 975px;
+  margin: 0 auto;
+}
+.constrain-camera {
+  max-width: 600px;
+  margin: 0 auto;
+}
