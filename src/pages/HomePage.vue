@@ -14,14 +14,27 @@
               <q-item-label class="text-bold"> zunoq </q-item-label>
               <q-item-label caption>{{ post.location }}</q-item-label>
             </q-item-section>
+            <q-section>
+              <q-btn color="grey-7" round flat icon="more_vert">
+                <q-menu cover auto-close>
+                  <q-list>
+                    <q-item clickable>
+                      <q-item-section>Edit</q-item-section>
+                    </q-item>
+                    <q-item clickable @click="removePost">
+                      <q-item-section>Remove</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+            </q-section>
           </q-item>
           <img :src="post.photo" />
-          <!-- TEST  -->
-          <!-- <PhotoCarousel /> -->
-
-          <!-- TEST -->
           <q-card-section>
-            <q-item-label class="text-grey-9"><strong class="text-grey-10">zunoq</strong> {{ post.caption }}</q-item-label>
+            <q-item-label class="text-grey-9"
+              ><strong class="text-grey-10">zunoq</strong>
+              {{ post.caption }}</q-item-label
+            >
             <div class="text-caption text-grey">
               {{ dateconvert(post.date) }}
             </div>
@@ -50,7 +63,7 @@
 import { defineComponent } from "vue";
 import { date } from "quasar";
 import { api, axios } from "boot/axios";
-
+import { useQuasar } from "quasar";
 // import PhotoCarousel from "src/components/PhotoCarousel.vue";
 export default defineComponent({
   name: "HomePage",
@@ -63,14 +76,21 @@ export default defineComponent({
   methods: {
     getPosts() {
       axios
-        .get("http://localhost:3000/posts")
+        .get(`${process.env.API}/posts`)
         .then((res) => {
           console.log(res);
           this.posts = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          const $q = useQuasar();
+          this.$q.dialog({
+            title: "Alert",
+            message: "Something went wrong. Please try again",
+          });
         });
+    },
+    removePost() {
+      console.log("Remove");
     },
   },
   computed: {

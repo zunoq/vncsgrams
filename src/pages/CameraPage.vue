@@ -13,6 +13,7 @@
       <q-btn
         v-if="hasCamera"
         @click="capturePicture"
+        :disable="imageCapture"
         outline
         round
         color="grey-10"
@@ -23,6 +24,7 @@
     <q-file
       filled
       bottom-slots
+      v-if="!hasCamera"
       v-model="photoUpload"
       label="Choose a picture"
       counter
@@ -65,7 +67,13 @@
       </div>
     </div>
     <div class="row justify-center q-pa-md">
-      <q-btn class="" outline label="Post" color="grey-10" />
+      <q-btn
+        :disable="!post.caption || !post.photo || !post.location"
+        @click="sendPost"
+        outline
+        label="Post"
+        color="grey-10"
+      />
     </div>
   </q-page>
 </template>
@@ -74,13 +82,16 @@
 import { defineComponent } from "vue";
 import { api, axios } from "boot/axios";
 import { uid } from "quasar";
+import { useQuasar } from "quasar";
+const $q = useQuasar();
+
 export default defineComponent({
   name: "CameraPage",
   data() {
     return {
       post: {
         id: uid(),
-        captions: "",
+        caption: "",
         location: "",
         photo: null,
         date: Date.now(),
@@ -180,20 +191,63 @@ export default defineComponent({
           console.log(res);
         })
         .catch((err) => {
-          this.locationError();
+          const $q = useQuasar();
+          this.$q.dialog({
+            title: "Alert",
+            message: "Something went wrong. Please try again",
+          });
         });
       this.locationLoading = true;
     },
     locationSuccess(res) {
+      console.log(res.data.city);
       this.post.location = res.data.city;
       if (res.data.country) {
         this.post.location += `, ${res.data.country}`;
       }
       this.locationLoading = false;
     },
-    locationError() {
-      console.log("error");
+    locationError(err) {
       this.locationLoading = false;
+    },
+    sendPost() {
+      console.log("clicked");
+      let formData = new FormData();
+      formData.append("id", this.post.id);
+      formData.append("caption", this.post.caption);
+      formData.append("location", this.post.location);
+      formData.append("date", this.post.date);
+      formData.append("photo", this.post.photo, this.post.id + ".png");
+
+      axios
+        .post(`${process.env.API}/createPost`, formData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // this.$router.push("/");
+      this.$q.notify({
+        message: "Successfull",
+        color: "grey-10",
+        actions: [
+          {
+            label: "Back to home",
+            color: "white",
+            handler: () => {
+              this.$router.push("/");
+            },
+          },
+          {
+            label: "Dismiss",
+            color: "white",
+            handler: () => {
+              /* ... */
+            },
+          },
+        ],
+      });
     },
   },
 

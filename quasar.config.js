@@ -60,7 +60,9 @@ module.exports = configure(function (ctx) {
 
       // transpile: false,
       // publicPath: '/',
-
+      env: {
+        API: "http://localhost:3000"
+      },
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
       // Applies only if "transpile" is set to true.
@@ -109,7 +111,10 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Dialog',
+        'Notify'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
